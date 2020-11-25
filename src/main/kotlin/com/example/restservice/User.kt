@@ -13,7 +13,7 @@ class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    var id: Int? = null
+    var id: Long? = null
     var name: String? = null
     var email: String? = null
 
