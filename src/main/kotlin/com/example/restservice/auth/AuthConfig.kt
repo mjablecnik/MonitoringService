@@ -1,4 +1,4 @@
-package com.example.restservice.config
+package com.example.restservice.auth
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
@@ -10,27 +10,32 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.config.http.SessionCreationPolicy
-import org.springframework.security.core.userdetails.UserDetailsService
+import org.springframework.security.core.AuthenticationException
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.web.AuthenticationEntryPoint
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
-
+import org.springframework.stereotype.Component
+import java.io.IOException
+import java.io.Serializable
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
 
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-open class WebSecurityConfig : WebSecurityConfigurerAdapter() {
+open class AuthConfig : WebSecurityConfigurerAdapter() {
 
 
     @Autowired
     private val jwtAuthenticationEntryPoint: JwtAuthenticationEntryPoint? = null
 
     @Autowired
-    private val jwtUserDetailsService: UserDetailsService? = null
+    private val authService: AuthService? = null
 
     @Autowired
-    private val jwtRequestFilter: JwtRequestFilter? = null
+    private val authFilter: AuthFilter? = null
 
     @Autowired
     @Throws(Exception::class)
@@ -38,7 +43,7 @@ open class WebSecurityConfig : WebSecurityConfigurerAdapter() {
         // configure AuthenticationManager so that it knows from where to load
         // user for matching credentials
         // Use BCryptPasswordEncoder
-        auth.userDetailsService(jwtUserDetailsService).passwordEncoder(passwordEncoder())
+        auth.userDetailsService(authService).passwordEncoder(passwordEncoder())
     }
 
     @Bean
@@ -61,7 +66,17 @@ open class WebSecurityConfig : WebSecurityConfigurerAdapter() {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
         // Add a filter to validate the tokens with every request
-        httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter::class.java)
+        httpSecurity.addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter::class.java)
     }
 }
 
+
+@Component
+class JwtAuthenticationEntryPoint : AuthenticationEntryPoint, Serializable {
+
+
+    @Throws(IOException::class)
+    override fun commence(request: HttpServletRequest, response: HttpServletResponse, authException: AuthenticationException) {
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized")
+    }
+}

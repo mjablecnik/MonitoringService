@@ -7,15 +7,17 @@ import javax.persistence.Id
 
 
 
-@Entity // This tells Hibernate to make a table out of this class
-class User {
+@Entity
+data class User (
 
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    var id: Long? = null
-    var name: String? = null
-    var email: String? = null
+    var id: Long? = null,
+    var name: String? = null,
+    var email: String? = null,
 
-}
+    var passwordHash: String? = null
+
+)
 

@@ -1,5 +1,7 @@
-package com.example.restservice.service
+package com.example.restservice.auth
 
+import com.example.restservice.UserRepository
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
@@ -10,13 +12,16 @@ import java.util.*
 
 
 @Service
-class JwtUserDetailsService : UserDetailsService {
+class AuthService : UserDetailsService {
 
+    @Autowired
+    private val userRepository: UserRepository? = null
 
     @Throws(UsernameNotFoundException::class)
     override fun loadUserByUsername(username: String): UserDetails {
-        return if ("javainuse" == username) {
-            User("javainuse", "$2a$10\$slYQmyNdGzTn7ZLBXBChFOC9f6kFjAqPhccnP6DxlWXx2lPk1C3G6", ArrayList())
+        val user = userRepository!!.findByEmail(username)
+        return if (user.email == username) {
+            User(user.email, user.passwordHash, ArrayList())
         } else {
             throw UsernameNotFoundException("User not found with username: $username")
         }

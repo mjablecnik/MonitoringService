@@ -1,9 +1,10 @@
 package com.example.restservice
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.ResponseEntity
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
-import java.util.*
 
 
 @Controller
@@ -16,24 +17,22 @@ class UserController {
 
     @ResponseBody
     @PostMapping(path = ["/"])
-    fun addNewUser(@RequestParam name: String?, @RequestParam email: String?): String {
-        val n = User()
-        n.name = name
-        n.email = email
-        userRepository!!.save(n)
-        return "Saved"
+    fun addNewUser(@RequestParam name: String?, @RequestParam email: String?, @RequestParam password: String?): ResponseEntity<String> {
+        val u = User(null, name, email, passwordHash = BCryptPasswordEncoder().encode(password))
+        userRepository!!.save(u)
+        return ResponseEntity.ok("Saved.")
     }
 
     @get:ResponseBody
     @get:GetMapping(path = ["/"])
-    val allUsers: Iterable<User?>
-        get() = userRepository!!.findAll()
+    val allUsers: ResponseEntity<MutableIterable<User?>>
+        get() = ResponseEntity.ok(userRepository!!.findAll())
 
 
     @ResponseBody
     @GetMapping(path = ["/{id}/"])
-    fun getUser(@PathVariable id: Long): Optional<User?> {
-        return userRepository!!.findById(id)
+    fun getUser(@PathVariable id: Long): ResponseEntity<Any> {
+        return ResponseEntity.ok(userRepository!!.findById(id))
     }
 }
 

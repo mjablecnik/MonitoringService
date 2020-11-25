@@ -1,6 +1,5 @@
-package com.example.restservice.config
+package com.example.restservice.auth
 
-import com.example.restservice.service.JwtUserDetailsService
 import io.jsonwebtoken.ExpiredJwtException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -16,11 +15,11 @@ import javax.servlet.http.HttpServletResponse
 
 
 @Component
-class JwtRequestFilter : OncePerRequestFilter() {
+class AuthFilter : OncePerRequestFilter() {
 
 
     @Autowired
-    private val jwtUserDetailsService: JwtUserDetailsService? = null
+    private val authService: AuthService? = null
 
     @Autowired
     private val jwtTokenUtil: JwtTokenUtil? = null
@@ -47,7 +46,7 @@ class JwtRequestFilter : OncePerRequestFilter() {
 
         // Once we get the token validate it.
         if (username != null && SecurityContextHolder.getContext().authentication == null) {
-            val userDetails = jwtUserDetailsService!!.loadUserByUsername(username)
+            val userDetails = authService!!.loadUserByUsername(username)
 
             // if token is valid configure Spring Security to manually set
             // authentication

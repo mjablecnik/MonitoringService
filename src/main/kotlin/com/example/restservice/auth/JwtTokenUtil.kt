@@ -1,4 +1,4 @@
-package com.example.restservice.config
+package com.example.restservice.auth
 
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
@@ -65,7 +65,6 @@ class JwtTokenUtil : Serializable {
     }
 
     companion object {
-        private const val serialVersionUID = -2550185165626007488L
         const val JWT_TOKEN_VALIDITY = 5 * 60 * 60.toLong()
     }
 }
