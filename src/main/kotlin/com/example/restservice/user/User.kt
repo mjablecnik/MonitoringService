@@ -1,5 +1,6 @@
 package com.example.restservice.user
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
@@ -17,7 +18,7 @@ data class User (
     var name: String? = null,
     var email: String? = null,
 
+    @JsonIgnore
     var passwordHash: String? = null
-
 )
 
