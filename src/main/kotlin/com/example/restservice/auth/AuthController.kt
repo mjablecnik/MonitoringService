@@ -1,5 +1,6 @@
 package com.example.restservice.auth
 
+import com.example.restservice.user.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.security.authentication.AuthenticationManager
@@ -12,7 +13,7 @@ import java.lang.Exception
 
 data class JwtRequest (val username: String?, val password: String? )
 
-data class JwtResponse(val token: String)
+data class JwtResponse(val name: String, val email: String, val token: String)
 
 
 @RestController
@@ -29,15 +30,19 @@ class AuthController {
     @Autowired
     private val authService: AuthService? = null
 
+    @Autowired
+    private val userRepository: UserRepository? = null
+
 
     @RequestMapping(value = ["/authenticate"], method = [RequestMethod.POST])
     @Throws(Exception::class)
     fun createAuthenticationToken(@RequestBody authenticationRequest: JwtRequest): ResponseEntity<*> {
         authenticate(authenticationRequest.username!!, authenticationRequest.password!!)
         val userDetails = authService!!.loadUserByUsername(authenticationRequest.username)
+        val user = userRepository!!.findByEmail(authenticationRequest.username)
 
         val token: String = jwtTokenUtil!!.generateToken(userDetails)
-        return ResponseEntity.ok<Any>(JwtResponse(token))
+        return ResponseEntity.ok<Any>(JwtResponse(user.name!!, user.email!!, token))
     }
 
     @Throws(Exception::class)
