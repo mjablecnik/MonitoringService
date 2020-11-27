@@ -7,8 +7,21 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
+import javax.validation.Valid
+import javax.validation.constraints.Min
+import javax.validation.constraints.Pattern
+import javax.validation.constraints.Size
 
-data class MonitoredEndpointRequest(val id: Long?, val name: String?, val url: String?, val interval: Int?)
+
+data class MonitoredEndpointRequest(
+        val id: Long?,
+        @field:Size(min = 5)
+        val name: String? = null,
+        @field:Pattern(regexp = "http(s)?://[a-z0-9-.:/]+")
+        val url: String?,
+        @field:Min(1)
+        val interval: Int?
+)
 
 
 @Controller
@@ -24,7 +37,7 @@ class MonitoredEndpointController {
 
     @ResponseBody
     @PostMapping(path = ["/"])
-    fun addNewMonitoredEndpoint(authentication: Authentication, @RequestBody monitoredEndpointRequest: MonitoredEndpointRequest): ResponseEntity<String> {
+    fun addNewMonitoredEndpoint(authentication: Authentication, @Valid @RequestBody monitoredEndpointRequest: MonitoredEndpointRequest): ResponseEntity<String> {
         monitoredEndpointRepository!!.save(
                 MonitoredEndpoint(
                         name = monitoredEndpointRequest.name ?: throw IllegalArgumentException("Name is required"),
@@ -39,7 +52,7 @@ class MonitoredEndpointController {
 
     @ResponseBody
     @PutMapping(path = ["/"])
-    fun updateMonitoredEndpoint(authentication: Authentication, @RequestBody monitoredEndpointRequest: MonitoredEndpointRequest): ResponseEntity<String> {
+    fun updateMonitoredEndpoint(authentication: Authentication, @Valid @RequestBody monitoredEndpointRequest: MonitoredEndpointRequest): ResponseEntity<String> {
         val monitoredEndpoint = monitoredEndpointRepository!!.findById(monitoredEndpointRequest.id ?: throw IllegalArgumentException("Id is required")).get()
         if (!monitoredEndpointRequest.name.isNullOrBlank()) { monitoredEndpoint.name = monitoredEndpointRequest.name }
         if (!monitoredEndpointRequest.url.isNullOrBlank()) { monitoredEndpoint.url = monitoredEndpointRequest.url }
