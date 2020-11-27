@@ -1,6 +1,6 @@
 package com.example.restservice.auth
 
-import com.example.restservice.UserRepository
+import com.example.restservice.user.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetails
