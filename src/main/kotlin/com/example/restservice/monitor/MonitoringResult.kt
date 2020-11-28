@@ -1,5 +1,6 @@
 package com.example.restservice.monitor
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import java.time.LocalDateTime
 import javax.persistence.*
 import javax.validation.constraints.NotNull
@@ -26,6 +27,7 @@ data class MonitoringResult (
     var returnedPayload: String? = null,
 
     @NotNull
+    @JsonIgnore
     @OneToOne
     var monitoredEndpoint: MonitoredEndpoint? = null
 )
