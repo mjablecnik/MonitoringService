@@ -38,8 +38,8 @@ class UserController {
 
     @get:ResponseBody
     @get:GetMapping(path = ["/"])
-    val allUsers: ResponseEntity<MutableIterable<User?>>
-        get() = ResponseEntity.ok(userRepository!!.findAll())
+    val allUsers: ResponseEntity<Map<String, Any>>
+        get() = ResponseEntity.ok(mapOf("users" to userRepository!!.findAll().toList()))
 
 
     @ResponseBody
