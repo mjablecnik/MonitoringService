@@ -2,6 +2,7 @@ package com.example.restservice.monitor
 
 import com.example.restservice.user.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.dao.PermissionDeniedDataAccessException
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.http.HttpStatus
@@ -48,20 +49,20 @@ class MonitorController {
                         owner = userRepository!!.findByEmail(authentication.name)
                 )
         )
-        return ResponseEntity.ok("Saved.")
+        return ResponseEntity.status(HttpStatus.CREATED).body("Saved.")
     }
 
 
     @ResponseBody
     @PutMapping(path = ["/endpoint"])
-    fun updateMonitoredEndpoint(authentication: Authentication, @Valid @RequestBody monitoredEndpointRequest: MonitoredEndpointRequest): ResponseEntity<String> {
+    fun updateMonitoredEndpoint(authentication: Authentication, @Valid @RequestBody monitoredEndpointRequest: MonitoredEndpointRequest): ResponseEntity<*> {
         val monitoredEndpoint = monitoredEndpointRepository!!.findById(monitoredEndpointRequest.id ?: throw IllegalArgumentException("Id is required")).get()
         if (!monitoredEndpointRequest.name.isNullOrBlank()) { monitoredEndpoint.name = monitoredEndpointRequest.name }
         if (!monitoredEndpointRequest.url.isNullOrBlank()) { monitoredEndpoint.url = monitoredEndpointRequest.url }
         if (monitoredEndpointRequest.interval != null) { monitoredEndpoint.monitoredInterval = monitoredEndpointRequest.interval }
 
         if (authentication.name != monitoredEndpoint.owner!!.email) {
-            return ResponseEntity.status(403).body("You are not owner.")
+            throw PermissionDeniedDataAccessException("You are not owner.", null)
         }
 
         monitoredEndpointRepository.save(monitoredEndpoint)
@@ -74,10 +75,10 @@ class MonitorController {
         val monitoredEndpoint = monitoredEndpointRepository!!.findById(id).get()
 
         if (authentication.name != monitoredEndpoint.owner!!.email) {
-            return ResponseEntity.status(403).body("You are not owner.")
+            throw PermissionDeniedDataAccessException("You are not owner.", null)
         }
         monitoredEndpointRepository.deleteById(id)
-        return ResponseEntity.ok("Deleted.")
+        return ResponseEntity.ok("Deleted")
     }
 
     @ResponseBody
@@ -87,8 +88,8 @@ class MonitorController {
             @RequestParam(defaultValue = "1") page: Int?,
             @RequestParam(defaultValue = "10") size: Int?
     ) : ResponseEntity<*> {
-        if (page!! < 1) { return errorResponse(HttpStatus.BAD_REQUEST, "Param page must be positive number.") }
-        if (size!! < 1) { return errorResponse(HttpStatus.BAD_REQUEST, "Param size must be positive number.") }
+        if (page!! < 1) { throw IllegalArgumentException("Param page must be positive number.") }
+        if (size!! < 1) { throw IllegalArgumentException("Param size must be positive number.") }
 
         val user = userRepository!!.findByEmail(authentication.name)
 
@@ -104,10 +105,10 @@ class MonitorController {
             @RequestParam(defaultValue = "10") size: Int?,
             @RequestParam(defaultValue = "desc") sort: String?
     ) : ResponseEntity<*> {
-        if (page!! < 1) { return errorResponse(HttpStatus.BAD_REQUEST, "Param page must be positive number.") }
-        if (size!! < 1) { return errorResponse(HttpStatus.BAD_REQUEST, "Param size must be positive number.") }
+        if (page!! < 1) { throw IllegalArgumentException("Param page must be positive number.") }
+        if (size!! < 1) { throw IllegalArgumentException("Param size must be positive number.") }
         if (listOf("desc", "asc").contains(sort!!.toLowerCase())) {
-            return errorResponse(HttpStatus.BAD_REQUEST, "Param sort can contain only: 'DESC' or 'ASC' values.")
+            throw IllegalArgumentException("Param sort can contain only: 'DESC' or 'ASC' values.")
         }
 
         val monitoredEndpoint = monitoredEndpointRepository!!.findById(id).get()
@@ -126,9 +127,3 @@ class MonitorController {
         return ResponseEntity.ok(results)
     }
 }
-
-
-fun errorResponse(status: HttpStatus, message: String): ResponseEntity<Map<String, String>> {
-    return ResponseEntity.status(status).body(mapOf("status" to status.toString(), "message" to message))
-}
-

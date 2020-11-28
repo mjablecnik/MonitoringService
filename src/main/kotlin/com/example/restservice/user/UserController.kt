@@ -1,6 +1,7 @@
 package com.example.restservice.user
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Controller
@@ -32,7 +33,7 @@ class UserController {
     fun addNewUser(@RequestBody @Valid userRequest: UserRequest): ResponseEntity<String> {
         val u = User(null, userRequest.name, userRequest.email, passwordHash = BCryptPasswordEncoder().encode(userRequest.password))
         userRepository!!.save(u)
-        return ResponseEntity.ok("Saved.")
+        return ResponseEntity.status(HttpStatus.CREATED).body("Saved.")
     }
 
     @get:ResponseBody
