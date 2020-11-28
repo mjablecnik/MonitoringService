@@ -20,7 +20,7 @@ data class UserRequest(
 )
 
 @Controller
-@RequestMapping(path = ["/users"])
+@RequestMapping(path = ["/user"])
 class UserController {
 
 

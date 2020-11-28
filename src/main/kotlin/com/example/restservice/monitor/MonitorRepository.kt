@@ -6,6 +6,8 @@ import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.query.Param
 
 
+interface MonitoringResultRepository : CrudRepository<MonitoringResult?, Long?>
+
 interface MonitoredEndpointRepository : CrudRepository<MonitoredEndpoint?, Long?> {
 
     @Query(value = "SELECT * from monitored_endpoint me where me.owner_id = :userId", nativeQuery = true)

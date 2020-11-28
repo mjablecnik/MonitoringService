@@ -25,8 +25,8 @@ data class MonitoredEndpointRequest(
 
 
 @Controller
-@RequestMapping(path = ["/MonitoredEndpoints"])
-class MonitoredEndpointController {
+@RequestMapping(path = ["/monitor"])
+class MonitorController {
 
     @Autowired
     private val monitoredEndpointRepository: MonitoredEndpointRepository? = null
@@ -36,7 +36,7 @@ class MonitoredEndpointController {
 
 
     @ResponseBody
-    @PostMapping(path = ["/"])
+    @PostMapping(path = ["/endpoint"])
     fun addNewMonitoredEndpoint(authentication: Authentication, @Valid @RequestBody monitoredEndpointRequest: MonitoredEndpointRequest): ResponseEntity<String> {
         monitoredEndpointRepository!!.save(
                 MonitoredEndpoint(
@@ -51,7 +51,7 @@ class MonitoredEndpointController {
 
 
     @ResponseBody
-    @PutMapping(path = ["/"])
+    @PutMapping(path = ["/endpoint"])
     fun updateMonitoredEndpoint(authentication: Authentication, @Valid @RequestBody monitoredEndpointRequest: MonitoredEndpointRequest): ResponseEntity<String> {
         val monitoredEndpoint = monitoredEndpointRepository!!.findById(monitoredEndpointRequest.id ?: throw IllegalArgumentException("Id is required")).get()
         if (!monitoredEndpointRequest.name.isNullOrBlank()) { monitoredEndpoint.name = monitoredEndpointRequest.name }
@@ -67,15 +67,7 @@ class MonitoredEndpointController {
     }
 
     @ResponseBody
-    @GetMapping(path = ["/"])
-    fun allMonitoredEndpoints(authentication: Authentication, @RequestParam(defaultValue = "0") page: Int?, @RequestParam(defaultValue = "10") size: Int?) : ResponseEntity<List<MonitoredEndpoint>?> {
-        val user = userRepository!!.findByEmail(authentication.name)
-
-        return ResponseEntity.ok(monitoredEndpointRepository!!.findByOwner(user.id!!, PageRequest.of(page!!, size!!)))
-    }
-
-    @ResponseBody
-    @DeleteMapping(path = ["/"])
+    @DeleteMapping(path = ["/endpoint"])
     fun deleteMonitoredEndpoint(authentication: Authentication, id: Long) : ResponseEntity<String> {
         val monitoredEndpoint = monitoredEndpointRepository!!.findById(id).get()
 
@@ -85,6 +77,15 @@ class MonitoredEndpointController {
         monitoredEndpointRepository.deleteById(id)
         return ResponseEntity.ok("Deleted.")
     }
+
+    @ResponseBody
+    @GetMapping(path = ["/endpoint"])
+    fun allMonitoredEndpoints(authentication: Authentication, @RequestParam(defaultValue = "1") page: Int?, @RequestParam(defaultValue = "10") size: Int?) : ResponseEntity<List<MonitoredEndpoint>?> {
+        val user = userRepository!!.findByEmail(authentication.name)
+
+        return ResponseEntity.ok(monitoredEndpointRepository!!.findByOwner(user.id!!, PageRequest.of(page!!-1, size!!)))
+    }
+
 }
 
 

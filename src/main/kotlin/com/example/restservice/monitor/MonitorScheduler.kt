@@ -12,7 +12,7 @@ import java.time.ZoneOffset
 
 @EnableAsync
 @Component
-open class MonitoringEndpointScheduler {
+open class MonitorScheduler {
 
     @Autowired
     private val monitoredEndpointRepository: MonitoredEndpointRepository? = null
@@ -24,7 +24,7 @@ open class MonitoringEndpointScheduler {
     @Async
     @Scheduled(fixedRate = 1000)
     @Throws(InterruptedException::class)
-    open fun scheduleFixedRateTaskAsync() {
+    open fun monitorEndpoints() {
         val monitoredEndpoints = monitoredEndpointRepository!!.findAll().toList()
         val currentTime = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)
 
