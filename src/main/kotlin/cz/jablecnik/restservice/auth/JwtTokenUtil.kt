@@ -1,4 +1,4 @@
-package com.example.restservice.auth
+package cz.jablecnik.restservice.auth
 
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts

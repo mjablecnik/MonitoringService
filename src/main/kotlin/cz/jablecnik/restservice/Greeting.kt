@@ -1,3 +1,3 @@
-package com.example.restservice
+package cz.jablecnik.restservice
 
 class Greeting(val id: Long, val content: String)

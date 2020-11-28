@@ -1,4 +1,4 @@
-package com.example.restservice.monitor
+package cz.jablecnik.restservice.monitor
 
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query

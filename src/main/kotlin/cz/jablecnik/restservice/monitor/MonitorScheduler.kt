@@ -1,4 +1,4 @@
-package com.example.restservice.monitor
+package cz.jablecnik.restservice.monitor
 
 import kong.unirest.Unirest
 import org.springframework.beans.factory.annotation.Autowired

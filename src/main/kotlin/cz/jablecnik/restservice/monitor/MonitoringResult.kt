@@ -1,4 +1,4 @@
-package com.example.restservice.monitor
+package cz.jablecnik.restservice.monitor
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import java.time.LocalDateTime

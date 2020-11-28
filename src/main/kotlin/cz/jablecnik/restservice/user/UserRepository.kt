@@ -1,4 +1,4 @@
-package com.example.restservice.user
+package cz.jablecnik.restservice.user
 
 import org.springframework.data.repository.CrudRepository
 

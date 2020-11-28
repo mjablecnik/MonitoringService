@@ -1,4 +1,4 @@
-package com.example.restservice.user
+package cz.jablecnik.restservice.user
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import javax.persistence.Entity

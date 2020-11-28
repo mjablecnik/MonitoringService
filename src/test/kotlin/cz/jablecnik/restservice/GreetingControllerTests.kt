@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.restservice
+package cz.jablecnik.restservice
 
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired

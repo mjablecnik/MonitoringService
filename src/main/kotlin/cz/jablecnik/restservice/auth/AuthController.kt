@@ -1,6 +1,6 @@
-package com.example.restservice.auth
+package cz.jablecnik.restservice.auth
 
-import com.example.restservice.user.UserRepository
+import cz.jablecnik.restservice.user.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.security.authentication.AuthenticationManager

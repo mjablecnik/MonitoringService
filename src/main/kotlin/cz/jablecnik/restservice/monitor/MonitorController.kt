@@ -1,6 +1,6 @@
-package com.example.restservice.monitor
+package cz.jablecnik.restservice.monitor
 
-import com.example.restservice.user.UserRepository
+import cz.jablecnik.restservice.user.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -43,9 +43,12 @@ class MonitorController {
     fun addNewMonitoredEndpoint(authentication: Authentication, @Valid @RequestBody monitoredEndpointRequest: MonitoredEndpointRequest): ResponseEntity<String> {
         monitoredEndpointRepository!!.save(
                 MonitoredEndpoint(
-                        name = monitoredEndpointRequest.name ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Name is required"),
-                        url = monitoredEndpointRequest.url ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Url is required"),
-                        monitoredInterval = monitoredEndpointRequest.interval ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Interval is required"),
+                        name = monitoredEndpointRequest.name
+                                ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Name is required"),
+                        url = monitoredEndpointRequest.url
+                                ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Url is required"),
+                        monitoredInterval = monitoredEndpointRequest.interval
+                                ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Interval is required"),
                         owner = userRepository!!.findByEmail(authentication.name)
                 )
         )

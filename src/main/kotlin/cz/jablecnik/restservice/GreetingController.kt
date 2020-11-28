@@ -1,4 +1,4 @@
-package com.example.restservice
+package cz.jablecnik.restservice
 
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestParam

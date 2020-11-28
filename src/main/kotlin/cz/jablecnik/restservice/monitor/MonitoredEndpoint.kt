@@ -1,6 +1,6 @@
-package com.example.restservice.monitor
+package cz.jablecnik.restservice.monitor
 
-import com.example.restservice.user.User
+import cz.jablecnik.restservice.user.User
 import com.fasterxml.jackson.annotation.*
 import java.time.LocalDateTime
 import javax.persistence.*

@@ -1,4 +1,4 @@
-package com.example.restservice.auth
+package cz.jablecnik.restservice.auth
 
 import io.jsonwebtoken.ExpiredJwtException
 import org.springframework.beans.factory.annotation.Autowired
