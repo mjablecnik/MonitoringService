@@ -21,7 +21,7 @@ data class User (
     var name: String? = null,
 
     @Email
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     var email: String? = null,
 
     @NotNull

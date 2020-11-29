@@ -20,7 +20,6 @@ data class MonitoredEndpoint constructor(
     @Column(nullable = false)
     var url: String? = null,
 
-    @Column(updatable = false)
     var created: LocalDateTime = LocalDateTime.now(),
 
     var lastCheck: LocalDateTime? = null,

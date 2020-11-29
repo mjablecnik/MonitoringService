@@ -21,7 +21,6 @@ data class UserRequest(
 )
 
 @Controller
-@RequestMapping(path = ["/user"])
 class UserController {
 
 
@@ -29,7 +28,7 @@ class UserController {
     private val userRepository: UserRepository? = null
 
     @ResponseBody
-    @PostMapping(path = ["/"])
+    @PostMapping(path = ["/user"])
     fun addNewUser(@RequestBody @Valid userRequest: UserRequest): ResponseEntity<String> {
         val u = User(null, userRequest.name, userRequest.email, passwordHash = BCryptPasswordEncoder().encode(userRequest.password))
         userRepository!!.save(u)
@@ -37,15 +36,16 @@ class UserController {
     }
 
     @get:ResponseBody
-    @get:GetMapping(path = ["/"])
+    @get:GetMapping(path = ["/user"])
     val allUsers: ResponseEntity<Map<String, Any>>
         get() = ResponseEntity.ok(mapOf("users" to userRepository!!.findAll().toList()))
 
 
     @ResponseBody
-    @GetMapping(path = ["/{id}/"])
+    @DeleteMapping(path = ["/user/{id}"])
     fun getUser(@PathVariable id: Long): ResponseEntity<Any> {
-        return ResponseEntity.ok(userRepository!!.findById(id))
+        userRepository!!.deleteById(id)
+        return ResponseEntity.ok("Deleted.")
     }
 }
 

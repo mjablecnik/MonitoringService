@@ -17,7 +17,6 @@ import javax.validation.constraints.Size
 
 
 data class MonitoredEndpointRequest(
-        val id: Long?,
         @field:Size(min = 5)
         val name: String? = null,
         @field:Pattern(regexp = "http(s)?://[a-z0-9-.:/]+")
@@ -57,9 +56,9 @@ class MonitorController {
 
 
     @ResponseBody
-    @PutMapping(path = ["/endpoint"])
-    fun updateMonitoredEndpoint(authentication: Authentication, @Valid @RequestBody monitoredEndpointRequest: MonitoredEndpointRequest): ResponseEntity<*> {
-        val monitoredEndpoint = monitoredEndpointRepository!!.findById(monitoredEndpointRequest.id ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Id is required")).get()
+    @PutMapping(path = ["/endpoint/{id}"])
+    fun updateMonitoredEndpoint(authentication: Authentication, @PathVariable id: Long, @Valid @RequestBody monitoredEndpointRequest: MonitoredEndpointRequest): ResponseEntity<*> {
+        val monitoredEndpoint = monitoredEndpointRepository!!.findById(id).get()
         if (!monitoredEndpointRequest.name.isNullOrBlank()) { monitoredEndpoint.name = monitoredEndpointRequest.name }
         if (!monitoredEndpointRequest.url.isNullOrBlank()) { monitoredEndpoint.url = monitoredEndpointRequest.url }
         if (monitoredEndpointRequest.interval != null) { monitoredEndpoint.monitoredInterval = monitoredEndpointRequest.interval }
@@ -73,8 +72,8 @@ class MonitorController {
     }
 
     @ResponseBody
-    @DeleteMapping(path = ["/endpoint"])
-    fun deleteMonitoredEndpoint(authentication: Authentication, id: Long) : ResponseEntity<*> {
+    @DeleteMapping(path = ["/endpoint/{id}"])
+    fun deleteMonitoredEndpoint(authentication: Authentication, @PathVariable id: Long) : ResponseEntity<*> {
         val monitoredEndpoint = monitoredEndpointRepository!!.findById(id).get()
 
         if (authentication.name != monitoredEndpoint.owner!!.email) {
@@ -100,7 +99,7 @@ class MonitorController {
     }
 
     @ResponseBody
-    @GetMapping(path = ["/endpoint/{id}/results"])
+    @GetMapping(path = ["/endpoint/{id}/result"])
     fun allMonitoringResults(
             authentication: Authentication,
             @PathVariable id: Long,

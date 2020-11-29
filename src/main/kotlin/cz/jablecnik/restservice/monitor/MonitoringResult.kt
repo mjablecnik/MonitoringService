@@ -19,11 +19,11 @@ data class MonitoringResult (
     var dateOfCheck: LocalDateTime = LocalDateTime.now(),
 
     @NotNull
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false)
     var returnedHttpStatusCode: Int? = null,
 
     @NotNull
-    @Column(columnDefinition = "MEDIUMTEXT", nullable = false, updatable = false)
+    @Column(columnDefinition = "MEDIUMTEXT", nullable = false)
     var returnedPayload: String? = null,
 
     @NotNull
