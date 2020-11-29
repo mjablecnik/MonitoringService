@@ -16,8 +16,8 @@ data class JwtRequest (val username: String?, val password: String? )
 data class JwtResponse(val name: String, val email: String, val token: String)
 
 
-@RestController
 @CrossOrigin
+@RestController
 class AuthController {
 
 
@@ -34,8 +34,8 @@ class AuthController {
     private val userRepository: UserRepository? = null
 
 
-    @RequestMapping(value = ["/authenticate"], method = [RequestMethod.POST])
     @Throws(Exception::class)
+    @RequestMapping(value = ["/authenticate"], method = [RequestMethod.POST])
     fun createAuthenticationToken(@RequestBody authenticationRequest: JwtRequest): ResponseEntity<*> {
         authenticate(authenticationRequest.username!!, authenticationRequest.password!!)
         val userDetails = authService!!.loadUserByUsername(authenticationRequest.username)

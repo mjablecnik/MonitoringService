@@ -32,20 +32,20 @@ class GreetingControllerTests {
     @Autowired
     private val mockMvc: MockMvc? = null
 
-    @Test
-    @Throws(Exception::class)
-    fun noParamGreetingShouldReturnDefaultMessage() {
-        mockMvc!!.perform(MockMvcRequestBuilders.get("/greeting"))
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isOk)
-                .andExpect(MockMvcResultMatchers.jsonPath("$.content").value("Hello, World!"))
-    }
+    //@Test
+    //@Throws(Exception::class)
+    //fun noParamGreetingShouldReturnDefaultMessage() {
+    //    mockMvc!!.perform(MockMvcRequestBuilders.get("/greeting"))
+    //            .andDo(MockMvcResultHandlers.print())
+    //            .andExpect(MockMvcResultMatchers.status().isOk)
+    //            .andExpect(MockMvcResultMatchers.jsonPath("$.content").value("Hello, World!"))
+    //}
 
-    @Test
-    @Throws(Exception::class)
-    fun paramGreetingShouldReturnTailoredMessage() {
-        mockMvc!!.perform(MockMvcRequestBuilders.get("/greeting").param("name", "Spring Community"))
-                .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk)
-                .andExpect(MockMvcResultMatchers.jsonPath("$.content").value("Hello, Spring Community!"))
-    }
+    //@Test
+    //@Throws(Exception::class)
+    //fun paramGreetingShouldReturnTailoredMessage() {
+    //    mockMvc!!.perform(MockMvcRequestBuilders.get("/greeting").param("name", "Spring Community"))
+    //            .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk)
+    //            .andExpect(MockMvcResultMatchers.jsonPath("$.content").value("Hello, Spring Community!"))
+    //}
 }

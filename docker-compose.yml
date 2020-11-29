@@ -1,0 +1,32 @@
+version: '3'
+services:
+
+  monitor:
+    image: applemann/monitor:latest
+    build: .
+    ports:
+    - "127.0.0.1:8080:8080"
+    - "127.0.0.1:4000:4000"
+    depends_on:
+    - database
+    external_links:
+    - database
+    environment:
+    - MYSQL_HOST=database
+    - MYSQL_PORT=3306
+    - MYSQL_DATABASE=monitor
+    - MYSQL_USER=root
+    - MYSQL_PASSWORD=jD4iWl5Hel4
+    - JWT_SECRET=Dmx&*@#1kljdkj7kd2KJDkd@kD&tkd#J9NnQhUyVM
+
+  database:
+    image: mysql:8
+    ports:
+    - "127.0.0.1:3306:3306"
+    environment:
+    - MYSQL_ROOT_PASSWORD=jD4iWl5Hel4
+    - MYSQL_DATABASE=monitor
+    volumes:
+    - "./sql:/docker-entrypoint-initdb.d"
+
+
