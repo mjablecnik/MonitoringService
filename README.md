@@ -9,9 +9,13 @@ docker-compose up
 ## Passwords for test users:
 
 ```
-Martin: vK83ffVh4e
-Michal: QaymHZc7rF
-Aneta:  jCRLXUu44T
++--------------------+------------+
+| username           | password   |
++--------------------+------------+
+| martin@example.com | vK83ffVh4e |
+| michal@example.com | QaymHZc7rF |
+| aneta@example.com  | jCRLXUu44T |
++--------------------+------------+
 ```
 
 # Endpoints:
