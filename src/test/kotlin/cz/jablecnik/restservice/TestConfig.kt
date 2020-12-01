@@ -1,6 +1,5 @@
 package cz.jablecnik.restservice
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import cz.jablecnik.restservice.auth.JwtTokenUtil
 import cz.jablecnik.restservice.monitor.MonitorController
 import cz.jablecnik.restservice.monitor.MonitorScheduler
@@ -13,6 +12,8 @@ import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.servlet.config.annotation.EnableWebMvc
 
+
+val APPLICATION_JSON_UTF8 = "application/json;charset=UTF-8"
 
 
 @Configuration
