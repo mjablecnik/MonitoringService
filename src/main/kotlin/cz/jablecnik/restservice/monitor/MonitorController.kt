@@ -42,6 +42,9 @@ class MonitorController {
     private val monitoredEndpointRepository: MonitoredEndpointRepository? = null
 
     @Autowired
+    private val monitoringResultRepository: MonitoringResultRepository? = null
+
+    @Autowired
     private val userRepository: UserRepository? = null
 
     private fun checkValidationErrors(errors: Errors) {
@@ -144,8 +147,8 @@ class MonitorController {
 
         val sortById = Sort.by(Sort.Direction.fromString(sort), "id")
 
-        val results = monitoredEndpointRepository.findResults(
-                monitoredEndpoint,
+        val results = monitoringResultRepository!!.findResults(
+                monitoredEndpoint.id!!,
                 PageRequest.of(page-1, size, sortById)
         )
 

@@ -7,7 +7,7 @@ import javax.persistence.*
 
 
 @Entity
-data class MonitoredEndpoint constructor(
+data class MonitoredEndpoint(
 
 
     @Id
