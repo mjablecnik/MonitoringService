@@ -40,9 +40,6 @@ open class AuthConfig : WebSecurityConfigurerAdapter() {
     @Autowired
     @Throws(Exception::class)
     fun configureGlobal(auth: AuthenticationManagerBuilder) {
-        // configure AuthenticationManager so that it knows from where to load
-        // user for matching credentials
-        // Use BCryptPasswordEncoder
         auth.userDetailsService(authService).passwordEncoder(passwordEncoder())
     }
 
@@ -59,8 +56,7 @@ open class AuthConfig : WebSecurityConfigurerAdapter() {
 
     @Throws(Exception::class)
     override fun configure(httpSecurity: HttpSecurity) {
-        // We don't need CSRF for this example
-        httpSecurity.csrf().disable() // dont authenticate this particular request
+        httpSecurity.csrf().disable()
                 .authorizeRequests().antMatchers("/authenticate").permitAll().anyRequest().authenticated().and()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

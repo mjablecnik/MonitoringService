@@ -12,7 +12,7 @@ import java.util.*
 
 
 @Service
-class AuthService : UserDetailsService {
+open class AuthService : UserDetailsService {
 
     @Autowired
     private val userRepository: UserRepository? = null

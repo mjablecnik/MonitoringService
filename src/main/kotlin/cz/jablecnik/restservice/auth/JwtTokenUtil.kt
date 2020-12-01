@@ -12,7 +12,7 @@ import kotlin.collections.HashMap
 
 
 @Component
-class JwtTokenUtil : Serializable {
+open class JwtTokenUtil : Serializable {
 
 
     @Value("\${jwt.secret}")

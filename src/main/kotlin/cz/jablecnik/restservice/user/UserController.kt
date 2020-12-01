@@ -43,7 +43,7 @@ class UserController {
 
     @ResponseBody
     @DeleteMapping(path = ["/user/{id}"])
-    fun getUser(@PathVariable id: Long): ResponseEntity<Any> {
+    fun deleteUser(@PathVariable id: Long): ResponseEntity<Any> {
         userRepository!!.deleteById(id)
         return ResponseEntity.ok("Deleted.")
     }
