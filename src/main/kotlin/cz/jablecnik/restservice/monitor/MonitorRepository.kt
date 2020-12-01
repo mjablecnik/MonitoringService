@@ -15,4 +15,7 @@ interface MonitoredEndpointRepository : CrudRepository<MonitoredEndpoint?, Long?
 
     @Query(value = "SELECT mr from MonitoringResult mr where mr.monitoredEndpoint = :endpoint", nativeQuery = false)
     fun findResults(@Param("endpoint") monitoredEndpoint: MonitoredEndpoint, pageable: Pageable): List<MonitoringResult>?
+
+    @Query(value = "SELECT me from MonitoredEndpoint me where me.id = :id", nativeQuery = false)
+    fun findById(@Param("id") id: Long): MonitoredEndpoint?
 }

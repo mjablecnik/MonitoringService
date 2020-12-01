@@ -23,12 +23,14 @@ data class MonitoredEndpointRequest(
         @field:Size(min = 5, message = "Minimal name length is 5.")
         @field:NotNull(message = "Name param is required")
         val name: String? = null,
+
         @field:Pattern(regexp = "http(s)?://[a-z0-9-.:/]+", message = "Url address is in wrong format.")
         @field:NotNull(message = "Url param is required")
-        val url: String?,
+        val url: String? = null,
+
         @field:Min(1, message = "Minimal interval value must be 1.")
         @field:NotNull(message = "Interval param is required")
-        val interval: Int?
+        val interval: Int? = null
 )
 
 
@@ -74,7 +76,8 @@ class MonitorController {
     fun updateMonitoredEndpoint(authentication: Authentication, @PathVariable id: Long, @Valid @RequestBody monitoredEndpointRequest: MonitoredEndpointRequest, errors: Errors): ResponseEntity<*> {
         checkValidationErrors(errors)
 
-        val monitoredEndpoint = monitoredEndpointRepository!!.findById(id).get()
+        val monitoredEndpoint = monitoredEndpointRepository!!.findById(id)
+                ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "MonitoredEndpoint with id $id doesn't exists.")
         monitoredEndpoint.name = monitoredEndpointRequest.name
         monitoredEndpoint.url = monitoredEndpointRequest.url
         monitoredEndpoint.monitoredInterval = monitoredEndpointRequest.interval
@@ -90,7 +93,8 @@ class MonitorController {
     @ResponseBody
     @DeleteMapping(path = ["/endpoint/{id}"])
     fun deleteMonitoredEndpoint(authentication: Authentication, @PathVariable id: Long) : ResponseEntity<*> {
-        val monitoredEndpoint = monitoredEndpointRepository!!.findById(id).get()
+        val monitoredEndpoint = monitoredEndpointRepository!!.findById(id)
+                ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "MonitoredEndpoint with id $id doesn't exists.")
 
         if (authentication.name != monitoredEndpoint.owner!!.email) {
             throw ResponseStatusException(HttpStatus.FORBIDDEN, "You are not owner.")
@@ -129,7 +133,8 @@ class MonitorController {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Param sort can contain only: 'DESC' or 'ASC' values.")
         }
 
-        val monitoredEndpoint = monitoredEndpointRepository!!.findById(id).get()
+        val monitoredEndpoint = monitoredEndpointRepository!!.findById(id)
+                ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "MonitoredEndpoint with id $id doesn't exists.")
 
         if (authentication.name != monitoredEndpoint.owner!!.email) {
             return ResponseEntity.status(403).body("You are not owner.")
