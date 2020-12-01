@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*
 import java.lang.Exception
 
 
-data class JwtRequest (val username: String?, val password: String?)
+data class JwtRequest(val username: String, val password: String)
 
 data class JwtResponse(val name: String, val email: String, val token: String)
 
@@ -36,7 +36,7 @@ class AuthController {
 
     @RequestMapping(value = ["/authenticate"], method = [RequestMethod.POST])
     fun createAuthenticationToken(@RequestBody authenticationRequest: JwtRequest): ResponseEntity<*> {
-        authenticate(authenticationRequest.username!!, authenticationRequest.password!!)
+        authenticate(authenticationRequest.username, authenticationRequest.password)
         val userDetails = authService!!.loadUserByUsername(authenticationRequest.username)
         val user = userRepository!!.findByEmail(authenticationRequest.username)
 

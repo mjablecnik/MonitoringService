@@ -8,20 +8,26 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
+import org.springframework.validation.Errors
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 import javax.validation.Valid
 import javax.validation.constraints.Min
+import javax.validation.constraints.NotNull
 import javax.validation.constraints.Pattern
 import javax.validation.constraints.Size
 
 
+
 data class MonitoredEndpointRequest(
-        @field:Size(min = 5)
+        @field:Size(min = 5, message = "Minimal name length is 5.")
+        @field:NotNull(message = "Name param is required")
         val name: String? = null,
-        @field:Pattern(regexp = "http(s)?://[a-z0-9-.:/]+")
+        @field:Pattern(regexp = "http(s)?://[a-z0-9-.:/]+", message = "Url address is in wrong format.")
+        @field:NotNull(message = "Url param is required")
         val url: String?,
-        @field:Min(1)
+        @field:Min(1, message = "Minimal interval value must be 1.")
+        @field:NotNull(message = "Interval param is required")
         val interval: Int?
 )
 
@@ -36,18 +42,26 @@ class MonitorController {
     @Autowired
     private val userRepository: UserRepository? = null
 
+    private fun checkValidationErrors(errors: Errors) {
+        if (errors.hasErrors()) {
+            if (errors.allErrors.size == 1) {
+                throw ResponseStatusException(HttpStatus.BAD_REQUEST, errors.allErrors.first().defaultMessage)
+            } else {
+                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Validation errors are: " + errors.allErrors.map { it.defaultMessage }.toString())
+            }
+        }
+    }
 
     @ResponseBody
     @PostMapping(path = ["/endpoint"])
-    fun addNewMonitoredEndpoint(authentication: Authentication, @Valid @RequestBody monitoredEndpointRequest: MonitoredEndpointRequest): ResponseEntity<String> {
+    fun addNewMonitoredEndpoint(authentication: Authentication, @Valid @RequestBody monitoredEndpointRequest: MonitoredEndpointRequest, errors: Errors): ResponseEntity<*> {
+        checkValidationErrors(errors)
+
         monitoredEndpointRepository!!.save(
                 MonitoredEndpoint(
-                        name = monitoredEndpointRequest.name
-                                ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Name is required"),
-                        url = monitoredEndpointRequest.url
-                                ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Url is required"),
-                        monitoredInterval = monitoredEndpointRequest.interval
-                                ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Interval is required"),
+                        name = monitoredEndpointRequest.name,
+                        url = monitoredEndpointRequest.url,
+                        monitoredInterval = monitoredEndpointRequest.interval,
                         owner = userRepository!!.findByEmail(authentication.name)
                 )
         )
@@ -57,11 +71,13 @@ class MonitorController {
 
     @ResponseBody
     @PutMapping(path = ["/endpoint/{id}"])
-    fun updateMonitoredEndpoint(authentication: Authentication, @PathVariable id: Long, @Valid @RequestBody monitoredEndpointRequest: MonitoredEndpointRequest): ResponseEntity<*> {
+    fun updateMonitoredEndpoint(authentication: Authentication, @PathVariable id: Long, @Valid @RequestBody monitoredEndpointRequest: MonitoredEndpointRequest, errors: Errors): ResponseEntity<*> {
+        checkValidationErrors(errors)
+
         val monitoredEndpoint = monitoredEndpointRepository!!.findById(id).get()
-        if (!monitoredEndpointRequest.name.isNullOrBlank()) { monitoredEndpoint.name = monitoredEndpointRequest.name }
-        if (!monitoredEndpointRequest.url.isNullOrBlank()) { monitoredEndpoint.url = monitoredEndpointRequest.url }
-        if (monitoredEndpointRequest.interval != null) { monitoredEndpoint.monitoredInterval = monitoredEndpointRequest.interval }
+        monitoredEndpoint.name = monitoredEndpointRequest.name
+        monitoredEndpoint.url = monitoredEndpointRequest.url
+        monitoredEndpoint.monitoredInterval = monitoredEndpointRequest.interval
 
         if (authentication.name != monitoredEndpoint.owner!!.email) {
             throw ResponseStatusException(HttpStatus.FORBIDDEN, "You are not owner.")
