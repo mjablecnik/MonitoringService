@@ -115,7 +115,9 @@ class MonitorController {
 
         val user = userRepository!!.findByEmail(authentication.name)
 
-        return ResponseEntity.ok(mapOf("endpoints" to monitoredEndpointRepository!!.findByOwner(user.id!!, PageRequest.of(page-1, size))))
+        val userEndpoints = monitoredEndpointRepository!!.findByOwner(user.id!!, PageRequest.of(page-1, size))
+
+        return ResponseEntity.ok(mapOf("endpoints" to userEndpoints))
     }
 
     @ResponseBody

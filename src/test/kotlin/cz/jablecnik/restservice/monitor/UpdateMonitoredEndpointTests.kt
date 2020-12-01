@@ -51,11 +51,8 @@ open class UpdateMonitoredEndpointTests {
                         owner = firstUser
                 ))
 
-        Mockito.`when`(userRepository!!.findByEmail("martin@example.com"))
-                .thenReturn(firstUser)
-
-        Mockito.`when`(userRepository.findByEmail("michal@example.com"))
-                .thenReturn(secondUser)
+        Mockito.`when`(userRepository!!.findByEmail(firstUser.email!!)).thenReturn(firstUser)
+        Mockito.`when`(userRepository.findByEmail(secondUser.email!!)).thenReturn(secondUser)
     }
 
 
