@@ -24,7 +24,7 @@ data class MonitoredEndpointRequest(
         @field:NotNull(message = "Name param is required")
         val name: String? = null,
 
-        @field:Pattern(regexp = "http(s)?://[a-z0-9-.:/]+", message = "Url address is in wrong format.")
+        @field:Pattern(regexp = "http(s)?://[a-z0-9-.:/=?&]+", message = "Url address is in wrong format.")
         @field:NotNull(message = "Url param is required")
         val url: String? = null,
 
@@ -70,7 +70,7 @@ class MonitorController {
                         owner = userRepository!!.findByEmail(authentication.name)
                 )
         )
-        return ResponseEntity.status(HttpStatus.CREATED).body("Saved.")
+        return ResponseEntity.status(HttpStatus.CREATED).body("Created")
     }
 
 
@@ -90,7 +90,7 @@ class MonitorController {
         }
 
         monitoredEndpointRepository.save(monitoredEndpoint)
-        return ResponseEntity.ok("Updated.")
+        return ResponseEntity.ok("Updated")
     }
 
     @ResponseBody

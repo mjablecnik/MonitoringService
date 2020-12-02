@@ -8,6 +8,7 @@ import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime
 import java.time.ZoneOffset
+import javax.transaction.Transactional
 
 
 @EnableAsync
@@ -22,6 +23,7 @@ open class MonitorScheduler {
 
 
     @Async
+    @Transactional
     @Scheduled(fixedRate = 1000)
     @Throws(InterruptedException::class)
     open fun monitorEndpoints() {

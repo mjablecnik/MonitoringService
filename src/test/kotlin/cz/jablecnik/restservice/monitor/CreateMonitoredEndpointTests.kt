@@ -45,7 +45,8 @@ open class CreateMonitoredEndpointTests {
                 MonitoredEndpointRequest(name = "Only http address", url = "http://www.seznam.cz/", interval = 5),
                 MonitoredEndpointRequest(name = "Https address", url = "http://www.centrum.cz/", interval = 50),
                 MonitoredEndpointRequest(name = "My ip address", url = "http://77.75.75.176", interval = 890),
-                MonitoredEndpointRequest(name = "My ip address", url = "http://77.75.75.176:8080", interval = 890)
+                MonitoredEndpointRequest(name = "My ip address", url = "http://77.75.75.176:8080", interval = 890),
+                MonitoredEndpointRequest(name = "My own address with params", url = "https://my.address.eu/users?page=1&limit=10", interval = 890)
         )
 
         for (requestData in requestDataList) {

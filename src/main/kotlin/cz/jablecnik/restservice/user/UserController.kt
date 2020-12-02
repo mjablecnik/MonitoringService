@@ -32,7 +32,7 @@ class UserController {
     fun addNewUser(@RequestBody @Valid userRequest: UserRequest): ResponseEntity<String> {
         val u = User(null, userRequest.name, userRequest.email, passwordHash = BCryptPasswordEncoder().encode(userRequest.password))
         userRepository!!.save(u)
-        return ResponseEntity.status(HttpStatus.CREATED).body("Saved.")
+        return ResponseEntity.status(HttpStatus.CREATED).body("Created")
     }
 
     @get:ResponseBody
@@ -45,7 +45,7 @@ class UserController {
     @DeleteMapping(path = ["/user/{id}"])
     fun deleteUser(@PathVariable id: Long): ResponseEntity<Any> {
         userRepository!!.deleteById(id)
-        return ResponseEntity.ok("Deleted.")
+        return ResponseEntity.ok("Deleted")
     }
 }
 
